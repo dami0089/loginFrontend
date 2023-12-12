@@ -47,14 +47,6 @@ export function DashboardNavbar() {
     localStorage.removeItem("token");
   };
 
-  const [seleccion, setSeleccion] = useState(0);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await busqueda(buscar);
-    navigate("/inicio/buscar");
-  };
-
   const handleNuevoUsuario = () => {
     handleModalNuevoUsuario();
   };

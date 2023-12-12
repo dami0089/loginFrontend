@@ -11,11 +11,41 @@ import {
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 import useAuth from "@/hooks/useAuth";
 import Cargando from "@/components/login/Cargando";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const RutaProtegida = () => {
-  const { auth, cargando } = useAuth();
+  const { auth, setAuth, cargando } = useAuth();
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
+
+  useEffect(() => {
+    const autenticarUsuario = async () => {
+      const token = localStorage.getItem("token");
+      const navigate = useNavigate();
+
+      if (!token) {
+        return;
+      }
+
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      try {
+        const { data } = await clienteAxios("/usuarios/perfil", config);
+        setAuth(data);
+        if (!data) {
+          navigate("/");
+        }
+      } catch (error) {
+        // setAuth({});
+      }
+    };
+    autenticarUsuario();
+  }, []);
 
   return (
     <>

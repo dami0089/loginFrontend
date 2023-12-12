@@ -34,9 +34,8 @@ const AuthProvider = ({ children }) => {
       try {
         const { data } = await clienteAxios("/usuarios/perfil", config);
         setAuth(data);
-        navigate("/inicio");
         if (data._id && location.pathname === "/") {
-          navigate("/inicio");
+          window.location.href = "http://datapredictor.solutions:5000/";
         }
       } catch (error) {
         // setAuth({});
