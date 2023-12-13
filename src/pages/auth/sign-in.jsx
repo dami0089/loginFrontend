@@ -78,7 +78,7 @@ export function SignIn() {
       });
 
       //Modificar domain de cache de arriba y el navigate de abajo
-      window.location.href = "http://datapredictor.solutions:5000/";
+      window.location.href = "http://datapredictor.solutions:5001/ppal";
       handleCargando();
     } catch (error) {
       toast.error(error.response.data.msg, {
