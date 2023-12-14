@@ -1284,7 +1284,6 @@ const EmpresasProvider = ({ children }) => {
         listadoCasosPorUser,
         handleModalNuevoCasoRol,
         modalNuevoCasoRol,
-        obtenerLink,
         archivo,
         setArchivo,
         casosUsuario,

@@ -33,18 +33,6 @@ export function SignIn() {
 
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const verificarLogeo = async () => {
-  //     const token = localStorage.getItem("token");
-  //     try {
-  //       if (token) {
-  //         window.location.href = "http://datapredictor.solutions:5000/";
-  //       }
-  //     } catch (error) {}
-  //   };
-  //   verificarLogeo();
-  // }, []);
-
   const handleSubmit = async (e) => {
     if ([email, password].includes("")) {
       toast("⚠️ Todos los campos son obligatorios!", {
@@ -72,13 +60,13 @@ export function SignIn() {
       Cookies.set("autentication", data.autentication, {
         expires: 7,
         path: "/",
-        domain: "http://datapredictor.solutions",
-        secure: true, // Necesario para SameSite=None
-        sameSite: "None", // Añadir esta línea si es necesario
+        domain: "datapredictor.solutions",
       });
+
 
       //Modificar domain de cache de arriba y el navigate de abajo
       window.location.href = "http://datapredictor.solutions:5001/ppal";
+
       handleCargando();
     } catch (error) {
       toast.error(error.response.data.msg, {

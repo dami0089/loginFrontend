@@ -20,6 +20,8 @@ function App() {
       <Route path="olvide-password" element={<OlvidePassword />} />
       <Route path="olvide-password/:token" element={<NuevoPassword />} />
 
+      {/* <Route path="/usuarios" element={<Home/>}/> */}
+
       <Route path="/usuarios" element={<RutaProtegida />}>
         <Route index element={<Home />} />
       </Route>

@@ -1,4 +1,4 @@
-import { Outlet, Navigate } from "react-router-dom";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 
 import routes from "@/routes";
 import {
@@ -10,42 +10,68 @@ import {
 
 import { useMaterialTailwindController, setOpenConfigurator } from "@/context";
 import useAuth from "@/hooks/useAuth";
-import Cargando from "@/components/login/Cargando";
-import { useEffect } from "react";
+
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import clienteAxios from "@/configs/clinteAxios";
+import Cargando from "@/components/login/Cargando";
 
 const RutaProtegida = () => {
-  const { auth, setAuth, cargando } = useAuth();
+  const { auth, setAuth, cargando, handleCargando } = useAuth();
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavType } = controller;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [buscar, setBuscar] = useState(false)
+
+  useEffect(() => {
+    const obtenerPath = () =>{
+      if(location.pathname === '/usuarios'){
+        setBuscar(true)
+      } 
+    }
+  }, []);
+
 
   useEffect(() => {
     const autenticarUsuario = async () => {
-      const token = localStorage.getItem("token");
-      const navigate = useNavigate();
-
-      if (!token) {
-        return;
-      }
-
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-      try {
-        const { data } = await clienteAxios("/usuarios/perfil", config);
-        setAuth(data);
-        if (!data) {
+      if(buscar){
+        const token = localStorage.getItem('token');
+        console.log("Obtener Token");
+        console.log(token);
+        if (!token) {
           navigate("/");
+          return;
         }
-      } catch (error) {
-        // setAuth({});
+    
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        };
+        console.log("Por hacer la consulta");
+        handleCargando()
+        try {
+          const { data } = await clienteAxios(`/usuarios/perfil`, config);
+          console.log(data);
+      
+          await setAuth(data);
+        handleCargando()
+  
+          if (!data) {
+            navigate("/");
+          }
+          setBuscar(false)
+        } catch (error) {
+          console.log(error);
+        }
       }
+      
     };
     autenticarUsuario();
-  }, []);
+  }, [buscar]);
 
   return (
     <>
@@ -63,8 +89,9 @@ const RutaProtegida = () => {
           </div>
         </div>
       ) : (
-        <Navigate to="/" />
+        null
       )}
+        <Cargando/>
     </>
   );
 };
