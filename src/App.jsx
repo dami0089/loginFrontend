@@ -8,6 +8,7 @@ import NuevoPassword from "./pages/auth/NuevoPassword";
 import useAuth from "./hooks/useAuth";
 import RutaProtegida from "./layouts/RutaProtegida";
 import { Home } from "./pages/inicio";
+import LogOut from "./pages/auth/LogOut";
 
 function App() {
   const { auth } = useAuth();
@@ -15,6 +16,9 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<SignIn />} />
+
+      <Route path="/logout" element={<LogOut />} />
+
 
       <Route path="crear-password/:token" element={<PrimerPassword />} />
       <Route path="olvide-password" element={<OlvidePassword />} />

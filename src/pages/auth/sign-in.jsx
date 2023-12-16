@@ -31,7 +31,67 @@ export function SignIn() {
 
   const { setAuth, handleCargando, auth } = useAuth();
 
+  const [autenticarUsuario,setAutenticarUsuario] = useState(false)
+
   const navigate = useNavigate();
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const checkAuthentication = async () => {
+    const token = localStorage.getItem("token");
+    const cookie = Cookies.get('autentication');
+
+    if (!token) {
+      return false;
+    }
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const { data } = await clienteAxios("/usuarios/perfil", config);
+      console.log(cookie);
+      console.log(data.autentication);
+      if (cookie !== data.autentication) {
+        localStorage.removeItem("token");
+        Cookies.remove('autentication');
+        toastWarning();
+        return false;
+      }
+      setAuth(data);
+      return data._id ? true : false;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  const toastWarning = () => {
+    toast("⚠️ Se inició sesión con tu usuario desde otro navegador. Vuelve a identificarte", {
+      position: "top-right",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  };
+
+  useEffect(() => {
+    checkAuthentication().then(authenticated => {
+      if (authenticated && location.pathname === "/") {
+        window.location.href = "http://datapredictor.solutions:5001/ppal";
+      } else {
+        setIsAuthenticated(authenticated);
+      }
+    });
+  }, []);
+  
 
   const handleSubmit = async (e) => {
     if ([email, password].includes("")) {

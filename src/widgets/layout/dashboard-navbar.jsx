@@ -24,6 +24,7 @@ import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
 import useEmpresas from "@/hooks/useEmpresas";
 import useUsuarios from "@/hooks/useUsuarios";
+import Cookies from "js-cookie";
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -45,6 +46,7 @@ export function DashboardNavbar() {
   const handleclose = () => {
     cerrarSesionAuth();
     localStorage.removeItem("token");
+    Cookies.remove('autentication')
   };
 
   const handleNuevoUsuario = () => {

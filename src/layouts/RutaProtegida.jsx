@@ -31,6 +31,7 @@ const RutaProtegida = () => {
         setBuscar(true)
       } 
     }
+    obtenerPath()
   }, []);
 
 
