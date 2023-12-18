@@ -7,6 +7,7 @@ import useUsuarios from "@/hooks/useUsuarios";
 import { Button, Typography } from "@material-tailwind/react";
 import useEmpresas from "@/hooks/useEmpresas";
 import useAuth from "@/hooks/useAuth";
+import Swal from "sweetalert2";
 
 const ModalEditarUsuario = () => {
   const {
@@ -27,6 +28,7 @@ const ModalEditarUsuario = () => {
     nombreDeUsuario,
     setNombreDeUsaurio,
     editarUsuario,
+    eliminarUsuario,
   } = useUsuarios();
 
   const { handleCargando } = useAuth();
@@ -72,12 +74,47 @@ const ModalEditarUsuario = () => {
     setEditar(false);
   };
 
+  const handleEliminar = async (e) => {
+    e.preventDefault();
+
+    Swal.fire({
+      title: "Seguro queres eliminar el usuario?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        handleCargando();
+        await eliminarUsuario(idUsuarioEditar);
+        setActualizarListados(true);
+        setIdUsuarioEditar("");
+        setNombreDeUsaurio("");
+        setNombre("");
+        setApellido("");
+        setEmail("");
+        handleModalEditarUsuario();
+        handleCargando();
+      }
+    });
+  };
+
+  const handleClose = () => {
+    setIdUsuarioEditar("");
+    setNombre("");
+    setApellido("");
+    setNombreDeUsaurio("");
+    setEmail("");
+    handleModalEditarUsuario();
+  };
+
   return (
     <Transition.Root show={modalEditarUsuario} as={Fragment}>
       <Dialog
         as="div"
         className="fixed inset-0 z-50 overflow-y-auto"
-        onClose={handleModalEditarUsuario}
+        onClose={handleClose}
       >
         <div className="flex min-h-screen items-end justify-center px-4 pb-20 pt-4 text-center sm:block sm:p-0">
           <ToastContainer pauseOnFocusLoss={false} />
@@ -116,7 +153,7 @@ const ModalEditarUsuario = () => {
                 <button
                   type="button"
                   className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  onClick={handleModalEditarUsuario}
+                  onClick={handleClose}
                 >
                   <span className="sr-only">Cerrar</span>
                   <svg
@@ -232,6 +269,12 @@ const ModalEditarUsuario = () => {
                       Guardar Usuario
                     </Button>
                   )}
+                  <Button
+                    className="mt-3 w-full bg-red-300 text-sm"
+                    onClick={(e) => handleEliminar(e)}
+                  >
+                    Eliminar Usuario
+                  </Button>
                 </div>
               </div>
             </div>

@@ -31,7 +31,7 @@ export function SignIn() {
 
   const { setAuth, handleCargando, auth } = useAuth();
 
-  const [autenticarUsuario,setAutenticarUsuario] = useState(false)
+  const [autenticarUsuario, setAutenticarUsuario] = useState(false);
 
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ export function SignIn() {
 
   const checkAuthentication = async () => {
     const token = localStorage.getItem("token");
-    const cookie = Cookies.get('autentication');
+    const cookie = Cookies.get("autentication");
 
     if (!token) {
       return false;
@@ -57,7 +57,7 @@ export function SignIn() {
       console.log(data.autentication);
       if (cookie !== data.autentication) {
         localStorage.removeItem("token");
-        Cookies.remove('autentication');
+        Cookies.remove("autentication");
         toastWarning();
         return false;
       }
@@ -70,28 +70,31 @@ export function SignIn() {
   };
 
   const toastWarning = () => {
-    toast("⚠️ Se inició sesión con tu usuario desde otro navegador. Vuelve a identificarte", {
-      position: "top-right",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    toast(
+      "⚠️ Se inició sesión con tu usuario desde otro navegador. Vuelve a identificarte",
+      {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      }
+    );
   };
 
   useEffect(() => {
-    checkAuthentication().then(authenticated => {
+    checkAuthentication().then((authenticated) => {
       if (authenticated && location.pathname === "/") {
-        window.location.href = "http://datapredictor.solutions:5001/ppal";
+        window.location.href = "http://datapredictor.solutions:5000";
+        // navigate("/usuarios");
       } else {
         setIsAuthenticated(authenticated);
       }
     });
   }, []);
-  
 
   const handleSubmit = async (e) => {
     if ([email, password].includes("")) {
@@ -123,9 +126,9 @@ export function SignIn() {
         domain: "datapredictor.solutions",
       });
 
-
       //Modificar domain de cache de arriba y el navigate de abajo
-      window.location.href = "http://datapredictor.solutions:5001/ppal";
+      window.location.href = "http://datapredictor.solutions:5000";
+      // navigate("/usuarios");
 
       handleCargando();
     } catch (error) {

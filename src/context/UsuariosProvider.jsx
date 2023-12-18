@@ -127,7 +127,7 @@ const UsuariosProvider = ({ children }) => {
     }
   };
 
-  const obtenerUsuarios = async () => {
+  const obtenerUsuarios = async (id) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) return;
@@ -138,9 +138,32 @@ const UsuariosProvider = ({ children }) => {
         },
       };
 
-      const { data } = await clienteAxios("/usuarios/obtener-usuarios", config);
+      const { data } = await clienteAxios(
+        `/usuarios/obtener-usuarios/${id}`,
+        config
+      );
 
       setListadoUsuarios(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const eliminarUsuario = async (id) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await clienteAxios.delete(
+        `/usuarios/eliminar-usuario/${id}`,
+        config
+      );
     } catch (error) {
       console.log(error);
     }
@@ -175,6 +198,7 @@ const UsuariosProvider = ({ children }) => {
         idUsuarioEditar,
         setIdUsuarioEditar,
         editarUsuario,
+        eliminarUsuario,
       }}
     >
       {children}

@@ -12,6 +12,7 @@ import {
   UserPlusIcon,
 } from "@heroicons/react/24/solid";
 import { ToastContainer } from "react-toastify";
+import useAuth from "@/hooks/useAuth";
 
 const ListadoDeUsuarios = () => {
   const navigate = useNavigate();
@@ -23,24 +24,17 @@ const ListadoDeUsuarios = () => {
     setNombre,
     setApellido,
     setEmail,
-    setObservacion,
-    setPaso1,
-    setPaso2,
-    setPaso3,
-    setIdEmpresaEditarUsuario,
-
-    handleModalNuevoUsuario,
-    nombreDeUsuario,
     setNombreDeUsaurio,
     obtenerUsuarios,
     listadoUsuarios,
-    idUsuarioEditar,
     setIdUsuarioEditar,
   } = useUsuarios();
 
+  const { auth } = useAuth();
+
   useEffect(() => {
     const obtenerLosUsuarios = async () => {
-      await obtenerUsuarios();
+      await obtenerUsuarios(auth._id);
       setActualizarListados(false);
     };
     obtenerLosUsuarios();
